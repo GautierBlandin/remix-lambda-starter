@@ -1,4 +1,4 @@
-# Welcome to Remix + Vite!
+# Welcome to Remix + Vite on Lambda!
 
 📖 See the [Remix docs](https://remix.run/docs) and the [Remix Vite docs](https://remix.run/docs/en/main/guides/vite) for details on supported features.
 
@@ -24,13 +24,23 @@ Then run the app in production mode:
 npm start
 ```
 
-Now you'll need to pick a host to deploy it to.
+### Deploy
 
-### DIY
+Install the [Pulumi CLI](https://www.pulumi.com/docs/get-started/install/)
 
-If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
+Install the infrastructure dependencies and configure your AWS credentials:
+```sh
+cd infrastructure
+npm install
+pulumi config set aws:region <your-region>
+pulumi config set aws:accessKey <your-access-key>
+pulumi config set aws:secretKey <your-secret-key> --secret
+cd ..
+```
 
-Make sure to deploy the output of `npm run build`
+Deploy the infrastructure:
+```sh
+npm run deploy
+```
 
-- `build/server`
-- `build/client`
+This starter repo is completely within the AWS free tier, so no need to worry about any costs.
