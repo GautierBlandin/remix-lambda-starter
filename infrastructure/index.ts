@@ -108,16 +108,15 @@ const stage = new aws.apigatewayv2.Stage('apiStage', {
 
 const httpApiEndpoint = pulumi.interpolate`${apigw.apiEndpoint}/${stage.name}`;
 
+const cachingDisabledPolicyId = '4135ea2d-6df8-44a3-9df3-4b5a84be39ad';
+const cachingOptimizedPolicyId = '658327ea-f89d-4fab-a63d-7e88639e58f6';
+const allVieverExceptHostHeaderPolicyId = 'b689b0a8-53d0-40ab-baf2-68738e2966ac';
+
 const cloudfrontOAC = new aws.cloudfront.OriginAccessControl('cloudfrontOAC', {
   originAccessControlOriginType: 's3',
   signingBehavior: 'always', // always override authroization header
   signingProtocol: 'sigv4', // only allowed value
 });
-
-const cachingDisabledPolicyId = '4135ea2d-6df8-44a3-9df3-4b5a84be39ad';
-const cachingOptimizedPolicyId = '658327ea-f89d-4fab-a63d-7e88639e58f6';
-const allVieverExceptHostHeaderPolicyId = 'b689b0a8-53d0-40ab-baf2-68738e2966ac';
-const s3cachingPolicyId = stack === 'prod' ? cachingOptimizedPolicyId : cachingDisabledPolicyId;
 
 const distribution = new aws.cloudfront.Distribution('distribution', {
   enabled: true,
@@ -156,7 +155,7 @@ const distribution = new aws.cloudfront.Distribution('distribution', {
       allowedMethods: ['GET', 'HEAD'],
       cachedMethods: ['GET', 'HEAD'],
       compress: true,
-      cachePolicyId: s3cachingPolicyId,
+      cachePolicyId: cachingOptimizedPolicyId,
       targetOriginId: 'S3Origin',
       viewerProtocolPolicy: 'redirect-to-https',
     },
@@ -165,7 +164,7 @@ const distribution = new aws.cloudfront.Distribution('distribution', {
       allowedMethods: ['GET', 'HEAD'],
       cachedMethods: ['GET', 'HEAD'],
       compress: true,
-      cachePolicyId: s3cachingPolicyId,
+      cachePolicyId: cachingOptimizedPolicyId,
       targetOriginId: 'S3Origin',
       viewerProtocolPolicy: 'redirect-to-https',
     },
@@ -203,4 +202,4 @@ new aws.s3.BucketPolicy('allowCloudFrontBucketPolicy', {
   },
 });
 
-export const distributionDomain = pulumi.interpolate`${distribution.domainName}`;
+export const distributionAddress = pulumi.interpolate`https://${distribution.domainName}`;
