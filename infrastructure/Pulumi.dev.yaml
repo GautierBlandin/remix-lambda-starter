@@ -1,5 +1,0 @@
-config:
-  aws:accessKey: YOUR_ACCESS_KEY
-  aws:region: us-east-1
-  aws:secretKey:
-    secure: CONFIGURE_THROUGH_PULUMI_CLI
