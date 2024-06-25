@@ -7,26 +7,13 @@ const stack = pulumi.getStack();
 
 const bucket = new aws.s3.Bucket('bucket');
 
-const blockPublicAcls = new aws.s3.BucketPublicAccessBlock('public-access-block', {
-  bucket: bucket.bucket,
-  blockPublicAcls: false,
-});
-
-const ownershipControls = new aws.s3.BucketOwnershipControls('ownership-controls', {
-  bucket: bucket.bucket,
-  rule: {
-    objectOwnership: 'ObjectWriter',
-  },
-});
-
 new synced.S3BucketFolder(
   'synced-folder',
   {
     path: '../build/client',
     bucketName: bucket.bucket,
-    acl: 'public-read',
+    acl: 'private',
   },
-  { dependsOn: [ownershipControls, blockPublicAcls] },
 );
 
 const lambdaRole = new aws.iam.Role('lambdaRole', {
