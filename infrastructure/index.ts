@@ -5,17 +5,7 @@ import * as url from 'url';
 
 const stack = pulumi.getStack();
 
-const bucket = new aws.s3.Bucket('bucket', {
-  corsRules: [
-    {
-      allowedOrigins: ['*'],
-      allowedMethods: ['GET', 'HEAD'],
-      allowedHeaders: [],
-      exposeHeaders: [],
-      maxAgeSeconds: 300,
-    },
-  ],
-});
+const bucket = new aws.s3.Bucket('bucket');
 
 const blockPublicAcls = new aws.s3.BucketPublicAccessBlock('public-access-block', {
   bucket: bucket.bucket,
@@ -124,7 +114,7 @@ const distribution = new aws.cloudfront.Distribution('distribution', {
   origins: [
     {
       originId: 'S3Origin',
-      domainName: bucket.bucketDomainName,
+      domainName: bucket.bucketRegionalDomainName,
       originAccessControlId: cloudfrontOAC.id,
     },
     {
