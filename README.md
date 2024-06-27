@@ -43,4 +43,9 @@ Deploy the infrastructure:
 npm run deploy
 ```
 
+Build the application and deploy it to the infrastructure:
+```sh
+npm run build-deploy
+```
+
 This starter repo is completely within the AWS free tier, so no need to worry about any costs.
